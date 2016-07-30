@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="MusixProTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#311b92</item>
+        <item name="colorPrimaryDark">#140150</item>
+        <item name="colorAccent">#ffff5722</item>
+        <item name="alertDialogTheme">@style/Theme.AppCompat.Dialog.Alert</item>
+    </style>
+
+
+    <style name="CarTheme" parent="MusixProAppTheme">
+        <!-- colorPrimaryDark is currently used in Android Auto for:
+             - App background
+             - Drawer right side ("more" custom actions) background
+             - Notification icon badge tinting
+             - Overview “now playing” icon tinting
+         -->
+        <item name="colorPrimaryDark">#311b92</item>
+
+        <!-- colorAccent is used in Android Auto for:
+             - Spinner
+             - progress bar
+             - floating action button background (Play/Pause in media apps)
+         -->
+        <item name="colorAccent">@color/bt_accent</item>
+    </style>
+
+    <style name="WearTheme" parent="MusixProTheme">
+        <!-- colorPrimaryDark is currently used on Android Wear for:
+             - Card background on media browse
+             - Card background on 4-way media controls
+         -->
+        <item name="colorPrimaryDark">#311b92</item>
+    </style>
+
+
+    <style name="Theme.MusixPro.TVLeanback" parent="Theme.Leanback">
+    </style>
+</resources>

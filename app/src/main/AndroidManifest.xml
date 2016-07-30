@@ -1,0 +1,176 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.project.bittu.musixpro">
+
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
+
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <application
+        android:name=".MusixProApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/MusixProAppTheme"
+        android:banner="@drawable/banner_tv">
+
+
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBmr7SMzTsOIcIldqBG4R0iA6EgEF2jsVw"></meta-data>
+
+        <receiver android:name=".widget.MusixProWidget" android:label="@string/receiver_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.project.bittu.musixpro.FORCE_WIDGET_UPDATE"></action>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/musix_pro_widget_info"/>
+        </receiver>
+
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Main activity for music browsing on phone -->
+        <activity
+            android:name=".ui.MusicPlayerActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Use this intent filter to get voice searches, like "Play The Beatles" -->
+            <intent-filter>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Placeholder activity for phone UI -->
+        <activity
+            android:name=".ui.PlaceholderActivity"
+            android:label="@string/app_name">
+        </activity>
+
+        <!-- Proxy activity that opens either the NowPlaying TV or the mobile UI, depending on
+        the current environment -->
+        <activity
+            android:name=".ui.NowPlayingActivity"
+            android:icon="@drawable/ic_launcher">
+        </activity>
+
+        <!-- Main activity for Android TV user interface -->
+        <activity
+            android:name=".ui.tv.TvBrowseActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MusixPro.TVLeanback" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.tv.TvVerticalGridActivity"
+            android:theme="@style/Theme.MusixPro.TVLeanback"
+            android:parentActivityName=".ui.tv.TvBrowseActivity" />
+
+        <!-- Android TV UI when playing a song -->
+        <activity
+            android:name=".ui.tv.TvPlaybackActivity"
+            android:theme="@style/Theme.MusixPro.TVLeanback"
+            android:parentActivityName=".ui.tv.TvBrowseActivity" />
+
+        <!--
+             (OPTIONAL) use this meta data to indicate which icon should be
+             used in Android Auto media notifications (for example, when the
+             music changes and the user is looking at another app)
+        -->
+        <meta-data
+            android:name="com.google.android.gms.car.notification.SmallIcon"
+            android:resource="@drawable/ic_notification" />
+
+        <!--
+             (OPTIONAL) use this meta data to override the theme from which Android Auto will
+             look for colors. If you don't set this, Android Auto will look
+             for color attributes in your application theme.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.car.application.theme"
+            android:resource="@style/CarTheme" />
+
+        <!--
+             (OPTIONAL) use this meta data to override the theme from which Android Wear will
+             look for colors. Currently, only background color of the media cards can be set, via
+             colorPrimaryDark. If you don't set this custom theme, Android Wear will look
+             for colorPrimaryDark attribute in your application theme.
+        -->
+        <meta-data
+            android:name="com.google.android.wearable.media.theme"
+            android:resource="@style/WearTheme" />
+
+        <!-- Main music service, provides media browsing and media playback services to
+         consumers through MediaBrowserService and MediaSession. Consumers connect to it through
+         MediaBrowser (for browsing) and MediaController (for play session control) -->
+        <service
+            android:name=".MusicService"
+            android:exported="true"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <!-- Service that keeps track of reconnecting to Cast when wifi is enabled. -->
+        <service
+            android:name="com.google.android.libraries.cast.companionlibrary.cast.reconnection.ReconnectionService"/>
+
+        <!-- A full screen activity showing controls and a seek bar for
+             the current playing music -->
+        <activity
+            android:name=".ui.FullScreenPlayerActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.MusicPlayerActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MusicPlayerActivity"/>
+        </activity>
+
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:authorities="com.project.bittu.musixpro"
+            android:name=".sql.MusixProProvider"
+            android:exported="true"/>
+
+
+
+    </application>
+
+</manifest>
